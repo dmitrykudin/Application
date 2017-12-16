@@ -9,7 +9,7 @@ namespace Perfomances.DataLayer
 {
     public interface IEventRepository
     {
-        void CreateEvent(CreateEventModel newEvent);
+        Event AddEvent(Event newEvent);
         Event GetEventById(int eventId);
         void DeleteEvent(Event delEvent);
         void DeleteEvent(int eventId);
