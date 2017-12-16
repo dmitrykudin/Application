@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateEventModel.cs" />
     <Compile Include="CreativeTeam.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="File.cs" />
