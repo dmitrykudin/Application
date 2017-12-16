@@ -10,9 +10,9 @@ namespace Perfomances.DataLayer
     public interface IEventRepository
     {
         void CreateEvent(Event newEvent, byte[] photo, string filename, Guid creativeTeamId);
-        Event GetEventById(int eventId);
+        Event GetEventById(Guid eventId);
         void DeleteEvent(Event delEvent);
-        void DeleteEvent(int eventId);
+        void DeleteEvent(Guid eventId);
         Event UpdateEvent(Event oldEvent, Event newEvent);
         List<Event> GetAllEvents();
         List<Event> GetUserSubscribedEvents(User user);

@@ -30,7 +30,7 @@ namespace Performances.DataLayer.PostgreSQL
                 }
                 catch (NpgsqlException ex)
                 {
-                    
+                    throw ex;
                 }
                 
                 using (var tran = connection.BeginTransaction())
@@ -86,20 +86,109 @@ namespace Performances.DataLayer.PostgreSQL
 
         public void DeleteEvent(Event delEvent)
         {
-            throw new NotImplementedException();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                }
+                catch (NpgsqlException ex)
+                {
+                    throw ex;
+                }
+
+                using (var tran = connection.BeginTransaction())
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText = "update event set photo=null where id=@id";
+                        command.Parameters.AddWithValue("@id", delEvent.Id);
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText =
+                            "delete from creativeteamevent where eventid=@id";
+                        command.Parameters.AddWithValue("@id", delEvent.Id);
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText =
+                            "delete from userevent where eventid=@id";
+                        command.Parameters.AddWithValue("@id", delEvent.Id);
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText =
+                            "delete from files where id=@photoid";
+                        command.Parameters.AddWithValue("@photoid", delEvent.Photo);
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText =
+                            "delete from event where id=@id";
+                        command.Parameters.AddWithValue("@id", delEvent.Id);
+                        command.ExecuteNonQuery();
+                    }
+                    tran.Commit();
+                }
+            }
         }
 
-        public void DeleteEvent(int eventId)
+        public void DeleteEvent(Guid eventId)
         {
-            throw new NotImplementedException();
+            Event delEvent = new Event();
+            delEvent = GetEventById(eventId);
+            DeleteEvent(delEvent);
         }
 
         public List<Event> GetAllEvents()
         {
-            throw new NotImplementedException();
+            List<Event> allEvents = new List<Event>();
+            using (var connection = new NpgsqlConnection())
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select * from event";
+                    using (var reader = command.ExecuteReader())
+                    {
+                        try
+                        {
+                            while (reader.Read())
+                            {
+                                Event curEvent = new Event();
+                                curEvent.Id = reader.GetGuid(reader.GetOrdinal("id"));
+                                curEvent.Description = reader.GetString(reader.GetOrdinal("description"));
+                                curEvent.DateAndTime = reader.GetDateTime(reader.GetOrdinal("datetime"));
+                                curEvent.ParticipantCount = reader.GetInt32(reader.GetOrdinal("participantcount"));
+                                curEvent.Photo = reader.GetGuid(reader.GetOrdinal("photo"));
+                                curEvent.Place = reader.GetString(reader.GetOrdinal("place"));
+                                allEvents.Add(curEvent);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            return allEvents;
         }
 
-        public Event GetEventById(int eventId)
+        public Event GetEventById(Guid eventId)
         {
             using (var connection = new NpgsqlConnection())
             {
@@ -111,15 +200,14 @@ namespace Performances.DataLayer.PostgreSQL
                     {
                         if (!reader.Read())
                             throw new ArgumentException($"Событие с Id {eventId} не нашлось");
-                        BitmapByteConverter converter = new BitmapByteConverter();
                         var newEvent = new Event()
                         {
-                            Id = reader.GetGuid(reader.GetOrdinal("Id")),
+                            Id = reader.GetGuid(reader.GetOrdinal("id")),
                             Description = reader.GetString(reader.GetOrdinal("description")),
                             ParticipantCount = reader.GetInt32(reader.GetOrdinal("participantcount")),
-                            Place = reader.GetString(reader.GetOrdinal("place"))
-                            //Photo = converter.ConvertByteToBitmap(reader.(reader.GetOrdinal("photo")))
-                            // TODO: Photo and DateTime conversion
+                            Place = reader.GetString(reader.GetOrdinal("place")),
+                            DateAndTime = reader.GetDateTime(reader.GetOrdinal("datetime")),
+                            Photo = reader.GetGuid(reader.GetOrdinal("photo"))
                         };
 
                         return newEvent;
@@ -130,12 +218,46 @@ namespace Performances.DataLayer.PostgreSQL
 
         public List<Event> GetNearestEvents(User user)
         {
-            throw new NotImplementedException();
+            // TODO: Это вряд ли напишем, нужна сложная логика, простая - бесполезно
+            return null;
         }
 
         public List<Event> GetUserSubscribedEvents(User user)
         {
-            throw new NotImplementedException();
+            List<Event> userEvents = new List<Event>();
+            using (var connection = new NpgsqlConnection())
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select e.id, e.place, e.participantcount, e.description, e.datetime, e.photo from user u " +
+                                          "join subscribes s on u.id = s.userid " +
+                                          "join creativeteam ct on s.creativeteamid = ct.id " +
+                                          "join creativeteamevent cte on ct.id = cte.creativeteamid " +
+                                          "join event e on cte.eventid = e.id";
+                    using (var reader = command.ExecuteReader())
+                    {
+                        try
+                        {
+                            while (reader.Read())
+                            {
+                                Event curEvent = new Event();
+                                curEvent.Id = reader.GetGuid(reader.GetOrdinal("id"));
+                                curEvent.Description = reader.GetString(reader.GetOrdinal("description"));
+                                curEvent.DateAndTime = reader.GetDateTime(reader.GetOrdinal("datetime"));
+                                curEvent.ParticipantCount = reader.GetInt32(reader.GetOrdinal("participantcount"));
+                                curEvent.Photo = reader.GetGuid(reader.GetOrdinal("photo"));
+                                curEvent.Place = reader.GetString(reader.GetOrdinal("place"));
+                                userEvents.Add(curEvent);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            return userEvents;
         }
 
         public Event UpdateEvent(Event oldEvent, Event newEvent)
