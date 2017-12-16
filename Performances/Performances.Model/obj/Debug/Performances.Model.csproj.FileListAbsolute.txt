@@ -1,0 +1,6 @@
+D:\leti\4\Project\Application\Performances\Performances.Model\bin\Debug\Performances.Model.dll
+D:\leti\4\Project\Application\Performances\Performances.Model\bin\Debug\Performances.Model.pdb
+D:\leti\4\Project\Application\Performances\Performances.Model\obj\Debug\Performances.Model.csprojResolveAssemblyReference.cache
+D:\leti\4\Project\Application\Performances\Performances.Model\obj\Debug\Performances.Model.csproj.CoreCompileInputs.cache
+D:\leti\4\Project\Application\Performances\Performances.Model\obj\Debug\Performances.Model.dll
+D:\leti\4\Project\Application\Performances\Performances.Model\obj\Debug\Performances.Model.pdb

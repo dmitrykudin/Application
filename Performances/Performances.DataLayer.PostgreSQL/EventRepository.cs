@@ -20,7 +20,7 @@ namespace Performances.DataLayer.PostgreSQL
             _connectionString = connectionString;
         }
 
-        public void CreateEvent(CreateEventModel newEvent)
+        public void CreateEvent(Event newEvent)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -32,16 +32,13 @@ namespace Performances.DataLayer.PostgreSQL
                 {
                     
                 }
-
-                BitmapByteConverter converter = new BitmapByteConverter();
-                newEvent.FilePhoto.Path = converter.ConvertBitmapToByte(newEvent.Photo).ToString();
-
+                
                 using (var tran = connection.BeginTransaction())
                 {
                     using (var command = connection.CreateCommand())
                     {
                         command.Transaction = tran;
-                        command.CommandText = "insert into files (path, fileextension)"
+                        command.CommandText = "insert into files (path, fileextension)";
                     }
 
                     using (var command = connection.CreateCommand())
@@ -53,7 +50,7 @@ namespace Performances.DataLayer.PostgreSQL
                         command.Parameters.AddWithValue("@place", newEvent.Place);
                         command.Parameters.AddWithValue("@participantcount", newEvent.ParticipantCount);
                         command.Parameters.AddWithValue("@description", newEvent.Description);
-                        command.Parameters.AddWithValue("@photo", newEvent.FilePhoto.Id);
+                        command.Parameters.AddWithValue("@photo", newEvent.Photo);
                         command.Parameters.AddWithValue("@datetime", new NpgsqlDateTime(newEvent.DateAndTime));
                         command.ExecuteNonQuery();
                     }
@@ -96,7 +93,7 @@ namespace Performances.DataLayer.PostgreSQL
                         BitmapByteConverter converter = new BitmapByteConverter();
                         var newEvent = new Event()
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Id = reader.GetGuid(reader.GetOrdinal("Id")),
                             Description = reader.GetString(reader.GetOrdinal("description")),
                             ParticipantCount = reader.GetInt32(reader.GetOrdinal("participantcount")),
                             Place = reader.GetString(reader.GetOrdinal("place"))

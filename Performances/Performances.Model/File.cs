@@ -8,9 +8,10 @@ namespace Performances.Model
 {
     public class File
     {
-        public int Id { get; set; }
-        public string Path { get; set; }
-        public int OwnerId { get; set; }
+        public Guid Id { get; set; }
+        public string Bytes { get; set; }
+        public Guid OwnerId { get; set; }
         public string FileExtension { get; set; }
+        public string Filename { get; set; }
     }
 }

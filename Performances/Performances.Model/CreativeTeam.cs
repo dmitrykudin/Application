@@ -9,11 +9,11 @@ namespace Performances.Model
 {
     public class CreativeTeam
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public BitmapImage Photo { get; set; }
+        public Guid Photo { get; set; }
         public string Genre { get; set; }
         public string About { get; set; }
         public int SubscribersCount { get; set; }

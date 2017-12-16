@@ -9,11 +9,11 @@ namespace Performances.Model
 {
     public class Event
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Place { get; set; }
         public int ParticipantCount { get; set; }
         public string Description { get; set; }
-        public BitmapImage Photo { get; set; }
+        public Guid Photo { get; set; }
         public DateTime DateAndTime { get; set; }
     }
 }

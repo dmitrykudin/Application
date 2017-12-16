@@ -1,0 +1,2 @@
+D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.csprojResolveAssemblyReference.cache
+D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.csproj.CoreCompileInputs.cache
