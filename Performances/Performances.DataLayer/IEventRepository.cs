@@ -9,11 +9,11 @@ namespace Perfomances.DataLayer
 {
     public interface IEventRepository
     {
-        void CreateEvent(Event newEvent, byte[] photo, string filename, Guid creativeTeamId);
+        Event CreateEvent(Event newEvent, byte[] photo, string filename, Guid creativeTeamId);
         Event GetEventById(Guid eventId);
         void DeleteEvent(Event delEvent);
         void DeleteEvent(Guid eventId);
-        Event UpdateEvent(Event oldEvent, Event newEvent);
+        Event UpdateEvent(Event newEvent);
         List<Event> GetAllEvents();
         List<Event> GetUserSubscribedEvents(User user);
         List<Event> GetNearestEvents(User user);

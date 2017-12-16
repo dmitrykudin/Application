@@ -13,14 +13,14 @@ namespace Performances.DataLayer.PostgreSQL
 {
     public class EventRepository : IEventRepository
     {
-        private readonly string _connectionString; // = "Server=localhost;Port=5432;User Id=client;Password=passclient;Database=testdb;";
+        private readonly string _connectionString; // = "Server=localhost;Port=5432;User Id=client;Password=passclient;Database=testdb;Search Path=test;";
 
         public EventRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public void CreateEvent(Event newEvent, byte[] photo, string filename, Guid creativeTeamId)
+        public Event CreateEvent(Event newEvent, byte[] photo, string filename, Guid creativeTeamId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -60,8 +60,9 @@ namespace Performances.DataLayer.PostgreSQL
                     {
                         command.Transaction = tran;
                         command.CommandText =
-                            "insert into event (place, participantcount, description, photo, date, time)"
-                            + " values (@place, @participantcount, @description, @photo, @date, @time)";
+                            "insert into event (id, place, participantcount, description, photo, datetime)"
+                            + " values (@id, @place, @participantcount, @description, @photo, @datetime)";
+                        command.Parameters.AddWithValue("@id", newEvent.Id);
                         command.Parameters.AddWithValue("@place", newEvent.Place);
                         command.Parameters.AddWithValue("@participantcount", newEvent.ParticipantCount);
                         command.Parameters.AddWithValue("@description", newEvent.Description);
@@ -82,6 +83,7 @@ namespace Performances.DataLayer.PostgreSQL
                     tran.Commit();
                 }
             }
+            return newEvent;
         }
 
         public void DeleteEvent(Event delEvent)
@@ -159,6 +161,7 @@ namespace Performances.DataLayer.PostgreSQL
             List<Event> allEvents = new List<Event>();
             using (var connection = new NpgsqlConnection())
             {
+                connection.Open();
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "select * from event";
@@ -192,6 +195,7 @@ namespace Performances.DataLayer.PostgreSQL
         {
             using (var connection = new NpgsqlConnection())
             {
+                connection.Open();
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "select * from event where id = @EventId";
@@ -227,6 +231,7 @@ namespace Performances.DataLayer.PostgreSQL
             List<Event> userEvents = new List<Event>();
             using (var connection = new NpgsqlConnection())
             {
+                connection.Open();
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "select e.id, e.place, e.participantcount, e.description, e.datetime, e.photo from user u " +
@@ -260,9 +265,29 @@ namespace Performances.DataLayer.PostgreSQL
             return userEvents;
         }
 
-        public Event UpdateEvent(Event oldEvent, Event newEvent)
+        public Event UpdateEvent(Event newEvent)
         {
-            throw new NotImplementedException();
+            using (var connection = new NpgsqlConnection())
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "update test.event set place = @place, " +
+                                          "participantcount = @participantcount, " +
+                                          "description = @description, " +
+                                          "datetime = @datetime, " +
+                                          "photo = @photo " +
+                                          "WHERE id = @eventid";
+                    command.Parameters.AddWithValue("@eventId", newEvent.Id);
+                    command.Parameters.AddWithValue("@place", newEvent.Place);
+                    command.Parameters.AddWithValue("@participantcount", newEvent.ParticipantCount);
+                    command.Parameters.AddWithValue("@description", newEvent.Description);
+                    command.Parameters.AddWithValue("@datetime", newEvent.DateAndTime);
+                    command.Parameters.AddWithValue("@photo", newEvent.Photo);
+                    command.ExecuteNonQuery();
+                }
+            }
+            return newEvent;
         }
     }
 }

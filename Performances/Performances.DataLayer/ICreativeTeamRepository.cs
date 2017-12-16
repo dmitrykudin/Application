@@ -9,7 +9,7 @@ namespace Performances.DataLayer
 {
     public interface ICreativeTeamRepository
     {
-        CreativeTeam AddCreativeTeam(CreativeTeam creativeTeam);
+        CreativeTeam CreateCreativeTeam(CreativeTeam creativeTeam, byte[] photo, string filename);
         void DeleteCreativeTeam(CreativeTeam creativeTeam);
         void DeleteCreativeTeam(int creativeTeamId);
         CreativeTeam UpdateCreativeTeam(CreativeTeam oldCreativeTeam, CreativeTeam newCreativeTeam);

@@ -1,13 +1,14 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Performances.Model;
+using Performances.DataLayer.PostgreSQL;
 
 namespace Performances.DataLayer.PostgreSQL.Tests
 {
     [TestClass]
     public class UserRepositoryTests
     {
-        private readonly string _connectionString = "Server=localhost;Port=5432;User Id=client;Password=passclient;Database=testdb;"; 
+        private readonly string _connectionString = "Server=localhost;Port=5432;User Id=client;Password=passclient;Database=testdb;Search Path=test;"; 
         [TestMethod]
         public void ShouldCreateNewUser()
         {

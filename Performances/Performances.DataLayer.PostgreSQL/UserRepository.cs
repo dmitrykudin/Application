@@ -20,10 +20,10 @@ namespace Performances.DataLayer.PostgreSQL
 
         public User CreateUser(User user, File photo)
         {
-            photo.Id = new Guid();
-            user.Id = new Guid();
+            photo.Id = Guid.NewGuid();
+            user.Id = Guid.NewGuid();
             user.Photo = photo.Id;
-            using (var connection = new NpgsqlConnection())
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
@@ -31,8 +31,20 @@ namespace Performances.DataLayer.PostgreSQL
                     using (var command = connection.CreateCommand())
                     {
                         command.Transaction = transaction;
+                        command.CommandText = "insert into files (id, fileextension, filename, bytes)" +
+                                              "values (@id, @fileextension, @filename, @bytes)";
+                        command.Parameters.AddWithValue("@id", photo.Id);
+                        command.Parameters.AddWithValue("@fileextension", photo.FileExtension);
+                        command.Parameters.AddWithValue("@filename", photo.Filename);
+                        command.Parameters.AddWithValue("@bytes", photo.Bytes);
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = transaction;
                         command.CommandText =
-                            "insert into user (id, name, surname, email, password, city, age, photo) " +
+                            "insert into users (id, name, surname, email, password, city, age, photo) " +
                             "values (@id, @name, @surname, @email, @password, @city, @age, @photo)";
                         command.Parameters.AddWithValue("@id", user.Id);
                         command.Parameters.AddWithValue("@name", user.Name);
@@ -44,16 +56,7 @@ namespace Performances.DataLayer.PostgreSQL
                         command.Parameters.AddWithValue("@photo", user.Photo);
                         command.ExecuteNonQuery();
                     }
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.Transaction = transaction;
-                        command.CommandText = "insert into files (id, fileextension, filename, bytes)" +
-                                              "values (@id, @fileextension, @filename, @bytes)";
-                        command.Parameters.AddWithValue("@id", photo.Id);
-                        command.Parameters.AddWithValue("@fileextension", photo.FileExtension);
-                        command.Parameters.AddWithValue("@filename", photo.Filename);
-                        command.Parameters.AddWithValue("@bytes", photo.Bytes);
-                    }
+                    
                     transaction.Commit();
                 }
             }
