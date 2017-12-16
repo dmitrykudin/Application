@@ -20,7 +20,7 @@ namespace Performances.DataLayer.PostgreSQL
             _connectionString = connectionString;
         }
 
-        public void CreateEvent(Event newEvent)
+        public void CreateEvent(Event newEvent, byte[] photo, string filename, Guid creativeTeamId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -35,10 +35,25 @@ namespace Performances.DataLayer.PostgreSQL
                 
                 using (var tran = connection.BeginTransaction())
                 {
+                    File file = new File();
+                    file.Id = Guid.NewGuid();
+                    file.Bytes = photo;
+                    file.Filename = filename;
+                    file.FileExtension = filename.Split('.').Last();
+                    newEvent.Id = Guid.NewGuid();
+                    newEvent.Photo = file.Id;
+
                     using (var command = connection.CreateCommand())
                     {
                         command.Transaction = tran;
-                        command.CommandText = "insert into files (path, fileextension)";
+                        command.CommandText = 
+                            "insert into files (id, filename, fileextension, bytes)" +
+                            "values (@id, @filename, @fileextension, @bytes)";
+                        command.Parameters.AddWithValue("@id", file.Id);
+                        command.Parameters.AddWithValue("@filename", file.Filename);
+                        command.Parameters.AddWithValue("@fileextension", file.FileExtension);
+                        command.Parameters.AddWithValue("@bytes", file.Bytes);
+                        command.ExecuteNonQuery();
                     }
 
                     using (var command = connection.CreateCommand())
@@ -57,8 +72,14 @@ namespace Performances.DataLayer.PostgreSQL
 
                     using (var command = connection.CreateCommand())
                     {
-                        // TODO: Add link to creativeteam
+                        command.Transaction = tran;
+                        command.CommandText = "insert into creativeteamevent (creativeteamid, eventid)" +
+                                              "values (@creativeteamid, @eventid)";
+                        command.Parameters.AddWithValue("@creativeteamid", creativeTeamId);
+                        command.Parameters.AddWithValue("@eventid", newEvent.Id);
+                        command.ExecuteNonQuery();
                     }
+                    tran.Commit();
                 }
             }
         }
