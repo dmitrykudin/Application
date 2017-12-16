@@ -9,10 +9,11 @@ namespace Perfomances.DataLayer
 {
     public interface IUserRepository
     {
-        User CreateUser(User user, byte[] photo, string filename, string fileextension);
-        User GetUserById(int userId);
+        User CreateUser(User user, File photo);
+        User GetUserById(Guid userId);
+        List<User> GetAllUsers();
         void DeleteUser(User user);
-        void DeleteUser(int userId);
+        void DeleteUser(Guid userId);
         User UpdateUser(User user, User newUser);
     }
 }

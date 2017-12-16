@@ -18,12 +18,11 @@ namespace Performances.DataLayer.PostgreSQL
             _connectionString = connectionString;
         }
 
-        public User CreateUser(User user, byte[] photo, string filename, string fileextension)
+        public User CreateUser(User user, File photo)
         {
-            var file = new File();
-            file.Id = new Guid();
+            photo.Id = new Guid();
             user.Id = new Guid();
-            user.Photo = file.Id;
+            user.Photo = photo.Id;
             using (var connection = new NpgsqlConnection())
             {
                 connection.Open();
@@ -50,28 +49,132 @@ namespace Performances.DataLayer.PostgreSQL
                         command.Transaction = transaction;
                         command.CommandText = "insert into files (id, fileextension, filename, bytes)" +
                                               "values (@id, @fileextension, @filename, @bytes)";
-                        command.Parameters.AddWithValue("@id", file.Id);
-                        command.Parameters.AddWithValue("@fileextension", fileextension);
-                        command.Parameters.AddWithValue("@filename", filename);
-                        command.Parameters.AddWithValue("@bytes", photo);
+                        command.Parameters.AddWithValue("@id", photo.Id);
+                        command.Parameters.AddWithValue("@fileextension", photo.FileExtension);
+                        command.Parameters.AddWithValue("@filename", photo.Filename);
+                        command.Parameters.AddWithValue("@bytes", photo.Bytes);
+                    }
+                    transaction.Commit();
+                }
+            }
+            return user;
+        }
+
+        public void DeleteUser(Guid userId)
+        {
+            var user = new User();
+            user = GetUserById(userId);
+            DeleteUser(user);
+        }
+
+        public void DeleteUser(User user)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = transaction;
+                        command.CommandText = "delete from subscribes where userid=@id";
+                        command.Parameters.AddWithValue("id", user.Id);
+                        command.ExecuteNonQuery();
+                    }
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = transaction;
+                        command.CommandText = "delete from userevent where userid=@id";
+                        command.Parameters.AddWithValue("@id", user.Id);
+                        command.ExecuteNonQuery();
+                    }
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = transaction;
+                        command.CommandText = "update user set photo=null where id=@id";
+                        command.Parameters.AddWithValue("@id", user.Id);
+                        command.ExecuteNonQuery();
+                    }
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = transaction;
+                        command.CommandText = "delete from file where id=@fileid";
+                        command.Parameters.AddWithValue("@fileid", user.Photo);
+                        command.ExecuteNonQuery();
+                    }
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = transaction;
+                        command.CommandText = "delete from user where id=@id";
+                        command.Parameters.AddWithValue("@id", user.Id);
+                        command.ExecuteNonQuery();
                     }
                 }
             }
         }
 
-        public void DeleteUser(int userId)
+        public List<User> GetAllUsers()
         {
-            throw new NotImplementedException();
+            var AllUsers = new List<User>();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select * from user";
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var user = new User()
+                            {
+                                Id = reader.GetGuid(reader.GetOrdinal("id")),
+                                Photo = reader.GetGuid(reader.GetOrdinal("photo")),
+                                Password = reader.GetString(reader.GetOrdinal("password")),
+                                Age = reader.GetInt32(reader.GetOrdinal("age")),
+                                Surname = reader.GetString(reader.GetOrdinal("surname")),
+                                Email = reader.GetString(reader.GetOrdinal("email")),
+                                City = reader.GetString(reader.GetOrdinal("city")),
+                                Name = reader.GetString(reader.GetOrdinal("name"))
+                            };
+                            AllUsers.Add(user);
+                        }
+                    }
+                }
+            }
+            return AllUsers;
         }
 
-        public void DeleteUser(User user)
+        public User GetUserById(Guid userId)
         {
-            throw new NotImplementedException();
-        }
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select * from user where u.Id = @id";
+                    command.Parameters.AddWithValue("@Id", userId);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                            throw new ArgumentException($"Пользователь с Id {userId} не найден");
+                        var user = new User()
+                        {
+                            Id = reader.GetGuid(reader.GetOrdinal("id")),
+                            Photo = reader.GetGuid(reader.GetOrdinal("photo")),
+                            Password = reader.GetString(reader.GetOrdinal("password")),
+                            Age = reader.GetInt32(reader.GetOrdinal("age")),
+                            Surname = reader.GetString(reader.GetOrdinal("surname")),
+                            Email = reader.GetString(reader.GetOrdinal("email")),
+                            City = reader.GetString(reader.GetOrdinal("city")),
+                            Name = reader.GetString(reader.GetOrdinal("name"))
+                         };
 
-        public User GetUserById(int userId)
-        {
-            throw new NotImplementedException();
+                        return user;
+
+                    }
+                }
+            }
         }
 
         public User UpdateUser(User user, User newUser)
