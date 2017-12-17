@@ -239,6 +239,68 @@ namespace Performances.DataLayer.PostgreSQL.Tests
             usersRepository.Subscribe(newUser.Id, team.Id);
         }
 
+        [TestMethod]
+        public void ShouldUpdateUser()
+        {
+            var user = new User
+            {
+                Age = 18,
+                City = "Питер",
+                Email = "text@yandex.ru",
+                Name = "Марина",
+                Surname = "Купцова",
+                Password = "12345",
+            };
+
+            var file = new File
+            {
+                Bytes = new byte[0],
+                FileExtension = ".jpg",
+                Filename = "fotka"
+            };
+
+            var userRepository = new UserRepository(_connectionString);
+            var result = userRepository.CreateUser(user, file);
+            _tempUsers.Add(result.Id);
+
+            result.City = "Москва";
+            var updatedUser = userRepository.UpdateUser(result);
+
+            Assert.AreEqual(result.City, updatedUser.City);
+        }
+
+        [TestMethod]
+        public void ShouldLoginUser()
+        {
+            var user = new User
+            {
+                Age = 18,
+                City = "Питер",
+                Email = "text@yandex.ru",
+                Name = "Марина",
+                Surname = "Купцова",
+                Password = "123"
+            };
+
+            var file = new File
+            {
+                Bytes = new byte[0],
+                FileExtension = ".jpg",
+                Filename = "fotka"
+            };
+
+            var userRepository = new UserRepository(_connectionString);
+            var result = userRepository.CreateUser(user, file);
+            _tempUsers.Add(result.Id);
+
+            var loginUser = userRepository.Login(result.Email, result.Password);
+
+            Assert.AreEqual(result.Id, loginUser.Id);
+            Assert.AreEqual(result.Name, loginUser.Name);
+            Assert.AreEqual(result.Photo, loginUser.Photo);
+
+        }
+
         [TestCleanup]
         public void Clean()
         {
@@ -246,6 +308,8 @@ namespace Performances.DataLayer.PostgreSQL.Tests
                 new UserRepository(_connectionString).DeleteUser(id);
             foreach (var id in _tempEvents)
                 new EventRepository(_connectionString).DeleteEvent(id);
+            foreach (var id in _tempCreativeTeam)
+                new CreativeTeamRepository(_connectionString).DeleteCreativeTeam(id);
         }
     }
 }
