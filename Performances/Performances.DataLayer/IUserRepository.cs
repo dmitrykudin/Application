@@ -14,7 +14,8 @@ namespace Perfomances.DataLayer
         List<User> GetAllUsers();
         void DeleteUser(User user);
         void DeleteUser(Guid userId);
-        User UpdateUser(User user, User newUser);
+        User UpdateUser(User newUser);
+        User Login(string Email, string Password);
         void Subscribe(Guid userId, Guid creativeteamId);
         void GoToEvent(Guid userId, Guid eventId);
     }
