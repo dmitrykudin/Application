@@ -11,8 +11,8 @@ namespace Perfomances.DataLayer
     {
         Event CreateEvent(Event newEvent, byte[] photo, string filename, Guid creativeTeamId);
         Event GetEventById(Guid eventId);
-        void DeleteEvent(Event delEvent);
-        void DeleteEvent(Guid eventId);
+        Event DeleteEvent(Event delEvent);
+        Event DeleteEvent(Guid eventId);
         Event UpdateEvent(Event newEvent);
         List<Event> GetAllEvents();
         List<Event> GetUserSubscribedEvents(User user);

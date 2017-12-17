@@ -10,12 +10,30 @@ namespace Performances.DataLayer.PostgreSQL.Tests
     public class EventRepositoryTest
     {
         private readonly string _connectionString = "Server=localhost;Port=5432;User Id=client;Password=passclient;Database=testdb;Search Path=test;";
+        public List<CreativeTeam> ctlist = new List<CreativeTeam>();
         [TestMethod]
         public void ShouldCreateEvent()
         {
+            var creativeteam = new CreativeTeam();
+            var photo = new File();
+
             var newEvent = new Event();
             var file = new File();
-            Guid id = new Guid("82773a61-ce8a-49bc-b0dd-d47d968bffcb");
+
+            creativeteam.About = "test";
+            creativeteam.Email = "test@ya.ru";
+            creativeteam.Genre = "rock/hardcore/post-punk";
+            creativeteam.Name = "testband";
+            creativeteam.Password = "test";
+            creativeteam.Rating = 3.2;
+            creativeteam.SubscribersCount = 0;
+
+            photo.Bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+            photo.FileExtension = ".jpeg";
+            photo.Filename = "test.jpeg";
+
+            CreativeTeamRepository ctr = new CreativeTeamRepository(_connectionString);
+            var newct = ctr.CreateCreativeTeam(creativeteam, photo.Bytes, photo.Filename);
 
             newEvent.DateAndTime = DateTime.Now;
             newEvent.Description = "Big concert on the street of your city!";
@@ -27,10 +45,24 @@ namespace Performances.DataLayer.PostgreSQL.Tests
             file.Filename = "fotka";
 
             var eventrepository = new EventRepository(_connectionString);
-            var result = eventrepository.CreateEvent(newEvent, file.Bytes, file.Filename, id);
+            var result = eventrepository.CreateEvent(newEvent, file.Bytes, file.Filename, newct.Id);
 
             Assert.AreEqual(newEvent.Place, result.Place);
             Assert.AreEqual(newEvent.ParticipantCount, result.ParticipantCount);
+            Assert.AreEqual(newEvent.DateAndTime.Date, result.DateAndTime.Date);
         }
+
+        [TestMethod]
+        public void ShouldDeleteEvent()
+        {
+            var eventrepository = new EventRepository(_connectionString);
+
+
+            var result = eventrepository.DeleteEvent(id);
+
+            Assert.AreEqual(null, result.Id);
+        }
+
+
     }
 }

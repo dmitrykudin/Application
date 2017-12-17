@@ -83,10 +83,11 @@ namespace Performances.DataLayer.PostgreSQL
                     tran.Commit();
                 }
             }
-            return newEvent;
+
+            return GetEventById(newEvent.Id);
         }
 
-        public void DeleteEvent(Event delEvent)
+        public Event DeleteEvent(Event delEvent)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -147,19 +148,19 @@ namespace Performances.DataLayer.PostgreSQL
                     tran.Commit();
                 }
             }
+            return GetEventById(delEvent.Id);
         }
 
-        public void DeleteEvent(Guid eventId)
+        public Event DeleteEvent(Guid eventId)
         {
-            Event delEvent = new Event();
-            delEvent = GetEventById(eventId);
-            DeleteEvent(delEvent);
+            var delEvent = GetEventById(eventId);
+            return DeleteEvent(delEvent);
         }
 
         public List<Event> GetAllEvents()
         {
             List<Event> allEvents = new List<Event>();
-            using (var connection = new NpgsqlConnection())
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
@@ -193,7 +194,7 @@ namespace Performances.DataLayer.PostgreSQL
 
         public Event GetEventById(Guid eventId)
         {
-            using (var connection = new NpgsqlConnection())
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
@@ -229,7 +230,7 @@ namespace Performances.DataLayer.PostgreSQL
         public List<Event> GetUserSubscribedEvents(User user)
         {
             List<Event> userEvents = new List<Event>();
-            using (var connection = new NpgsqlConnection())
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
@@ -265,9 +266,48 @@ namespace Performances.DataLayer.PostgreSQL
             return userEvents;
         }
 
+        public List<Event> GetUserUpcomingEvents(User user)
+        {
+            List<Event> userUpcomingEvents = new List<Event>();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select e.id, e.place, e.participantcount, e.description, e.datetime, e.photo from user u " +
+                                          "join subscribes s on u.id = s.userid " +
+                                          "join creativeteam ct on s.creativeteamid = ct.id " +
+                                          "join creativeteamevent cte on ct.id = cte.creativeteamid " +
+                                          "join event e on cte.eventid = e.id";
+                    using (var reader = command.ExecuteReader())
+                    {
+                        try
+                        {
+                            while (reader.Read())
+                            {
+                                Event curEvent = new Event();
+                                curEvent.Id = reader.GetGuid(reader.GetOrdinal("id"));
+                                curEvent.Description = reader.GetString(reader.GetOrdinal("description"));
+                                curEvent.DateAndTime = reader.GetDateTime(reader.GetOrdinal("datetime"));
+                                curEvent.ParticipantCount = reader.GetInt32(reader.GetOrdinal("participantcount"));
+                                curEvent.Photo = reader.GetGuid(reader.GetOrdinal("photo"));
+                                curEvent.Place = reader.GetString(reader.GetOrdinal("place"));
+                                userUpcomingEvents.Add(curEvent);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            return userUpcomingEvents;
+        }
+
         public Event UpdateEvent(Event newEvent)
         {
-            using (var connection = new NpgsqlConnection())
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
