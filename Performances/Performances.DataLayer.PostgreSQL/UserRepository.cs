@@ -94,24 +94,25 @@ namespace Performances.DataLayer.PostgreSQL
                     using (var command = connection.CreateCommand())
                     {
                         command.Transaction = transaction;
-                        command.CommandText = "update user set photo=null where id=@id";
+                        command.CommandText = "update users set photo=null where id=@id";
                         command.Parameters.AddWithValue("@id", user.Id);
                         command.ExecuteNonQuery();
                     }
                     using (var command = connection.CreateCommand())
                     {
                         command.Transaction = transaction;
-                        command.CommandText = "delete from file where id=@fileid";
+                        command.CommandText = "delete from files where id=@fileid";
                         command.Parameters.AddWithValue("@fileid", user.Photo);
                         command.ExecuteNonQuery();
                     }
                     using (var command = connection.CreateCommand())
                     {
                         command.Transaction = transaction;
-                        command.CommandText = "delete from user where id=@id";
+                        command.CommandText = "delete from users where id=@id";
                         command.Parameters.AddWithValue("@id", user.Id);
                         command.ExecuteNonQuery();
                     }
+                    transaction.Commit();
                 }
             }
         }
@@ -124,7 +125,7 @@ namespace Performances.DataLayer.PostgreSQL
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "select * from user";
+                    command.CommandText = "select * from users";
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -155,8 +156,8 @@ namespace Performances.DataLayer.PostgreSQL
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "select * from user where u.Id = @id";
-                    command.Parameters.AddWithValue("@Id", userId);
+                    command.CommandText = "select * from users where id = @id";
+                    command.Parameters.AddWithValue("@id", userId);
                     using (var reader = command.ExecuteReader())
                     {
                         if (!reader.Read())

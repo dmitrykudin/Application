@@ -1,19 +1,5 @@
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.csprojResolveAssemblyReference.cache
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.csproj.CoreCompileInputs.cache
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.dll.config
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.dll
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.pdb
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Npgsql.dll
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.dll
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.Model.dll
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\System.Threading.Tasks.Extensions.dll
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.pdb
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.Model.pdb
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Npgsql.xml
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\System.Threading.Tasks.Extensions.xml
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.csprojResolveAssemblyReference.cache
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.dll
-C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.pdb
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.dll.config
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.dll
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.pdb
@@ -123,3 +109,17 @@ D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\bin
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\System.Threading.Tasks.Extensions.xml
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.dll
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.pdb
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.dll.config
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.dll
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.PostgreSQL.pdb
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Npgsql.dll
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.dll
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.Model.dll
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.DataLayer.pdb
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Performances.Model.pdb
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\Npgsql.xml
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.csprojResolveAssemblyReference.cache
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.dll
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL\obj\Debug\Performances.DataLayer.PostgreSQL.pdb
