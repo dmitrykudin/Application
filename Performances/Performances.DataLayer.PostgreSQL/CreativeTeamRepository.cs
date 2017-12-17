@@ -79,22 +79,131 @@ namespace Performances.DataLayer.PostgreSQL
 
         public void DeleteCreativeTeam(CreativeTeam creativeTeam)
         {
-            throw new NotImplementedException();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                }
+                catch (NpgsqlException ex)
+                {
+                    throw ex;
+                }
+
+                using (var tran = connection.BeginTransaction())
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText = "update creativeteam set photo=null where id=@id";
+                        command.Parameters.AddWithValue("@id", creativeTeam.Id);
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText = "delete from files where id=@photoid";
+                        command.Parameters.AddWithValue("@photoid", creativeTeam.Photo);
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText =
+                            "delete from subscribes where creativeteamid=@id";
+                        command.Parameters.AddWithValue("@id", creativeTeam.Id);
+                        command.ExecuteNonQuery();
+                    }
+
+                    List<Event> events = new List<Event>();
+                    EventRepository eventrepo = new EventRepository(_connectionString);
+                    events = eventrepo.GetCreativeTeamEvents(creativeTeam);
+
+                    foreach (var e in events)
+                    {
+                        eventrepo.DeleteEvent(e);
+                    }
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = tran;
+                        command.CommandText =
+                            "delete from creativeteam where id=@id";
+                        command.Parameters.AddWithValue("@id", creativeTeam.Id);
+                        command.ExecuteNonQuery();
+                    }
+                    tran.Commit();
+                }
+            }
         }
 
-        public void DeleteCreativeTeam(int creativeTeamId)
+        public void DeleteCreativeTeam(Guid creativeTeamId)
         {
-            throw new NotImplementedException();
+            DeleteCreativeTeam(GetCreativeTeamById(creativeTeamId));
         }
 
-        public CreativeTeam GetCreativeTeamById(int creativeTeamId)
+        public CreativeTeam GetCreativeTeamById(Guid creativeTeamId)
         {
-            throw new NotImplementedException();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select * from creativeteam where id = @creativeteamid";
+                    command.Parameters.AddWithValue("@creativeteamid", creativeTeamId);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                            throw new ArgumentException($"Творческого коллектива с Id {creativeTeamId} не нашлось");
+                        var newCreativeTeam = new CreativeTeam()
+                        {
+                            Id = reader.GetGuid(reader.GetOrdinal("id")),
+                            About = reader.GetString(reader.GetOrdinal("description")),
+                            SubscribersCount = reader.GetInt32(reader.GetOrdinal("participantcount")),
+                            Email = reader.GetString(reader.GetOrdinal("place")),
+                            Photo = reader.GetGuid(reader.GetOrdinal("photo")),
+                            Name = reader.GetString(reader.GetOrdinal("name")),
+                            Password = reader.GetString(reader.GetOrdinal("password")),
+                            Genre = reader.GetString(reader.GetOrdinal("genre")),
+                            Rating = reader.GetDouble(reader.GetOrdinal("rating"))
+                        };
+                        return newCreativeTeam;
+                    }
+                }
+            }
         }
 
-        public CreativeTeam UpdateCreativeTeam(CreativeTeam oldCreativeTeam, CreativeTeam newCreativeTeam)
+        public CreativeTeam UpdateCreativeTeam(CreativeTeam newCreativeTeam)
         {
-            throw new NotImplementedException();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "update creativeteam set name = @name, " +
+                                          "genre = @genre, " +
+                                          "about = @about, " +
+                                          "subscriberscount = @subscriberscount, " +
+                                          "photo = @photo " +
+                                          "rating = @rating " +
+                                          "password = @password " +
+                                          "email = @email " +
+                                          "WHERE id = @creativeteamid";
+                    command.Parameters.AddWithValue("@creativeteamid", newCreativeTeam.Id);
+                    command.Parameters.AddWithValue("@name", newCreativeTeam.Name);
+                    command.Parameters.AddWithValue("@genre", newCreativeTeam.Genre);
+                    command.Parameters.AddWithValue("@subscriberscount", newCreativeTeam.SubscribersCount);
+                    command.Parameters.AddWithValue("@photo", newCreativeTeam.Photo);
+                    command.Parameters.AddWithValue("@password", newCreativeTeam.Password);
+                    command.Parameters.AddWithValue("@rating", newCreativeTeam.Rating);
+                    command.Parameters.AddWithValue("@email", newCreativeTeam.Email);
+                    command.Parameters.AddWithValue("@about", newCreativeTeam.About);
+                    command.ExecuteNonQuery();
+                }
+            }
+            return newCreativeTeam;
         }
     }
 }

@@ -11,8 +11,8 @@ namespace Performances.DataLayer
     {
         CreativeTeam CreateCreativeTeam(CreativeTeam creativeTeam, byte[] photo, string filename);
         void DeleteCreativeTeam(CreativeTeam creativeTeam);
-        void DeleteCreativeTeam(int creativeTeamId);
-        CreativeTeam UpdateCreativeTeam(CreativeTeam oldCreativeTeam, CreativeTeam newCreativeTeam);
-        CreativeTeam GetCreativeTeamById(int creativeTeamId);
+        void DeleteCreativeTeam(Guid creativeTeamId);
+        CreativeTeam UpdateCreativeTeam(CreativeTeam newCreativeTeam);
+        CreativeTeam GetCreativeTeamById(Guid creativeTeamId);
     }
 }

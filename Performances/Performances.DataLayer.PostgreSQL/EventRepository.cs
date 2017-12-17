@@ -84,10 +84,10 @@ namespace Performances.DataLayer.PostgreSQL
                 }
             }
 
-            return GetEventById(newEvent.Id);
+            return newEvent;
         }
 
-        public Event DeleteEvent(Event delEvent)
+        public void DeleteEvent(Event delEvent)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -148,13 +148,12 @@ namespace Performances.DataLayer.PostgreSQL
                     tran.Commit();
                 }
             }
-            return GetEventById(delEvent.Id);
         }
 
-        public Event DeleteEvent(Guid eventId)
+        public void DeleteEvent(Guid eventId)
         {
             var delEvent = GetEventById(eventId);
-            return DeleteEvent(delEvent);
+            DeleteEvent(delEvent);
         }
 
         public List<Event> GetAllEvents()
@@ -190,6 +189,46 @@ namespace Performances.DataLayer.PostgreSQL
                 }
             }
             return allEvents;
+        }
+
+        public List<Event> GetCreativeTeamEvents(CreativeTeam creativeTeam)
+        {
+            List<Event> creativeTeamEvents = new List<Event>();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select e.id, e.datetime, e.photo, e.description, e.participantcount, e.place " +
+                                          "FROM event e " +
+                                          "join creativeteamevent cte ON e.id = cte.eventid " +
+                                          "join creativeteam ct ON cte.creativeteamid = ct.id " +
+                                          "where ct.id = @creativeteamid";
+                    command.Parameters.AddWithValue("@creativeteamid", creativeTeam.Id);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        try
+                        {
+                            while (reader.Read())
+                            {
+                                Event curEvent = new Event();
+                                curEvent.Id = reader.GetGuid(reader.GetOrdinal("id"));
+                                curEvent.Description = reader.GetString(reader.GetOrdinal("description"));
+                                curEvent.DateAndTime = reader.GetDateTime(reader.GetOrdinal("datetime"));
+                                curEvent.ParticipantCount = reader.GetInt32(reader.GetOrdinal("participantcount"));
+                                curEvent.Photo = reader.GetGuid(reader.GetOrdinal("photo"));
+                                curEvent.Place = reader.GetString(reader.GetOrdinal("place"));
+                                creativeTeamEvents.Add(curEvent);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            return creativeTeamEvents;
         }
 
         public Event GetEventById(Guid eventId)
@@ -316,7 +355,7 @@ namespace Performances.DataLayer.PostgreSQL
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "update test.event set place = @place, " +
+                    command.CommandText = "update event set place = @place, " +
                                           "participantcount = @participantcount, " +
                                           "description = @description, " +
                                           "datetime = @datetime, " +
