@@ -125,3 +125,6 @@ D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL.Tes
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL.Tests\bin\Debug\System.Xml.XPath.XDocument.dll
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL.Tests\bin\Debug\System.Threading.Tasks.Extensions.dll
 D:\leti\4\Project\Application\Performances\Performances.DataLayer.PostgreSQL.Tests\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL.Tests\bin\Debug\Performances.DataLayer.PostgreSQL.Tests.dll.config
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL.Tests\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\302\Documents\Visual Studio 2015\Projects\Application\Application\Performances\Performances.DataLayer.PostgreSQL.Tests\bin\Debug\System.Threading.Tasks.Extensions.xml

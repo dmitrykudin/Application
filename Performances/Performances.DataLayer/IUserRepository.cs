@@ -15,5 +15,7 @@ namespace Perfomances.DataLayer
         void DeleteUser(User user);
         void DeleteUser(Guid userId);
         User UpdateUser(User user, User newUser);
+        void Subscribe(Guid userId, Guid creativeteamId);
+        void GoToEvent(Guid userId, Guid eventId);
     }
 }

@@ -180,6 +180,41 @@ namespace Performances.DataLayer.PostgreSQL
             }
         }
 
+        public void GoToEvent(Guid userId, Guid eventId)
+        {
+            bool status = true;
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+                        "insert into userevent (status, userid, eventid) values (@status, @userid, @eventid)";
+                    command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@userid", userId);
+                    command.Parameters.AddWithValue("@eventid", eventId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Subscribe(Guid userId, Guid creativeteamId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+                        "insert into subscribes (userid, creativeteamid) " +
+                        "values (@userid, @teamid)";
+                    command.Parameters.AddWithValue("@userid", userId);
+                    command.Parameters.AddWithValue("@teamid", creativeteamId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public User UpdateUser(User user, User newUser)
         {
             throw new NotImplementedException();
