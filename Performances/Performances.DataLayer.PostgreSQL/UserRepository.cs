@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Npgsql;
@@ -181,6 +182,48 @@ namespace Performances.DataLayer.PostgreSQL
             }
         }
 
+        public User Login(string Email, string Password)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                }
+                catch(NpgsqlException ex)
+                {
+                    throw ex;
+                }
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select * from users where email = @email and password = @password";
+                    command.Parameters.AddWithValue("@email", Email);
+                    command.Parameters.AddWithValue("@password", Password);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                        {
+                            return null;
+                        }
+                        var user = new User()
+                        {
+                            Age = reader.GetInt32(reader.GetOrdinal("age")),
+                            City = reader.GetString(reader.GetOrdinal("city")),
+                            Email = reader.GetString(reader.GetOrdinal("email")),
+                            Id = reader.GetGuid(reader.GetOrdinal("id")),
+                            Name = reader.GetString(reader.GetOrdinal("name")),
+                            Password = reader.GetString(reader.GetOrdinal("password")),
+                            Photo = reader.GetGuid(reader.GetOrdinal("photo")),
+                            Surname = reader.GetString(reader.GetOrdinal("surname"))
+                        };
+                        return user;
+                    }
+                }
+            }
+        }
+
         public void GoToEvent(Guid userId, Guid eventId)
         {
             bool status = true;
@@ -216,9 +259,33 @@ namespace Performances.DataLayer.PostgreSQL
             }
         }
 
-        public User UpdateUser(User user, User newUser)
+        public User UpdateUser(User newUser)
         {
-            throw new NotImplementedException();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "update users set name = @name, " +
+                                          "surname = @surname, " +
+                                          "email = @email, " +
+                                          "password = @password, " +
+                                          "city = @city, " +
+                                          "photo = @photo, " +
+                                          "age = @age " +
+                                          "WHERE id = @userid";
+                    command.Parameters.AddWithValue("@userid", newUser.Id);
+                    command.Parameters.AddWithValue("@name", newUser.Name);
+                    command.Parameters.AddWithValue("@surname", newUser.Surname);
+                    command.Parameters.AddWithValue("@email", newUser.Email);
+                    command.Parameters.AddWithValue("@password", newUser.Password);
+                    command.Parameters.AddWithValue("@city", newUser.City);
+                    command.Parameters.AddWithValue("@photo", newUser.Photo);
+                    command.Parameters.AddWithValue("@age", newUser.Age);
+                    command.ExecuteNonQuery();
+                }
+            }
+            return newUser;
         }
     }
 }
