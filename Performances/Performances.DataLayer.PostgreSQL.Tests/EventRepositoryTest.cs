@@ -10,7 +10,10 @@ namespace Performances.DataLayer.PostgreSQL.Tests
     public class EventRepositoryTest
     {
         private readonly string _connectionString = "Server=localhost;Port=5432;User Id=client;Password=passclient;Database=testdb;Search Path=test;";
-        public List<CreativeTeam> ctlist = new List<CreativeTeam>();
+        public List<Guid> ctlist = new List<Guid>();
+        public List<Guid> evlist = new List<Guid>();
+        public List<Guid> flist = new List<Guid>();
+
         [TestMethod]
         public void ShouldCreateEvent()
         {
@@ -34,6 +37,8 @@ namespace Performances.DataLayer.PostgreSQL.Tests
 
             CreativeTeamRepository ctr = new CreativeTeamRepository(_connectionString);
             var newct = ctr.CreateCreativeTeam(creativeteam, photo.Bytes, photo.Filename);
+            ctlist.Add(newct.Id);
+            flist.Add(newct.Photo);
 
             newEvent.DateAndTime = DateTime.Now;
             newEvent.Description = "Big concert on the street of your city!";
@@ -46,23 +51,11 @@ namespace Performances.DataLayer.PostgreSQL.Tests
 
             var eventrepository = new EventRepository(_connectionString);
             var result = eventrepository.CreateEvent(newEvent, file.Bytes, file.Filename, newct.Id);
+            evlist.Add(result.Id);
 
             Assert.AreEqual(newEvent.Place, result.Place);
             Assert.AreEqual(newEvent.ParticipantCount, result.ParticipantCount);
             Assert.AreEqual(newEvent.DateAndTime.Date, result.DateAndTime.Date);
         }
-
-        [TestMethod]
-        public void ShouldDeleteEvent()
-        {
-            var eventrepository = new EventRepository(_connectionString);
-
-
-            var result = eventrepository.DeleteEvent(id);
-
-            Assert.AreEqual(null, result.Id);
-        }
-
-
     }
 }
