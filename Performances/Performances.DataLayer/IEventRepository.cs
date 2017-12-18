@@ -17,6 +17,7 @@ namespace Perfomances.DataLayer
         List<Event> GetAllEvents();
         List<Event> GetCreativeTeamEvents(CreativeTeam creativeTeam);
         List<Event> GetUserSubscribedEvents(User user);
+        List<Event> GetUserUpcomingEvents(User user);
         List<Event> GetNearestEvents(User user);
     }
 }
