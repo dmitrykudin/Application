@@ -160,9 +160,9 @@ namespace Performances.DataLayer.PostgreSQL
                         var newCreativeTeam = new CreativeTeam()
                         {
                             Id = reader.GetGuid(reader.GetOrdinal("id")),
-                            About = reader.GetString(reader.GetOrdinal("description")),
-                            SubscribersCount = reader.GetInt32(reader.GetOrdinal("participantcount")),
-                            Email = reader.GetString(reader.GetOrdinal("place")),
+                            About = reader.GetString(reader.GetOrdinal("about")),
+                            SubscribersCount = reader.GetInt32(reader.GetOrdinal("subscriberscount")),
+                            Email = reader.GetString(reader.GetOrdinal("email")),
                             Photo = reader.GetGuid(reader.GetOrdinal("photo")),
                             Name = reader.GetString(reader.GetOrdinal("name")),
                             Password = reader.GetString(reader.GetOrdinal("password")),
@@ -186,9 +186,9 @@ namespace Performances.DataLayer.PostgreSQL
                                           "genre = @genre, " +
                                           "about = @about, " +
                                           "subscriberscount = @subscriberscount, " +
-                                          "photo = @photo " +
-                                          "rating = @rating " +
-                                          "password = @password " +
+                                          "photo = @photo, " +
+                                          "rating = @rating, " +
+                                          "password = @password, " +
                                           "email = @email " +
                                           "WHERE id = @creativeteamid";
                     command.Parameters.AddWithValue("@creativeteamid", newCreativeTeam.Id);
