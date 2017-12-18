@@ -156,9 +156,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CreateUserParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserRepositoryHandler.ashx.cs">
       <DependentUpon>UserRepositoryHandler.ashx</DependentUpon>
@@ -187,7 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Performances.DataLayer.PostgreSQL\Performances.DataLayer.PostgreSQL.csproj">

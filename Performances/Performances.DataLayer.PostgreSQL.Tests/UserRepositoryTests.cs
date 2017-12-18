@@ -18,7 +18,12 @@ namespace Performances.DataLayer.PostgreSQL.Tests
         public void ShouldCreateNewUser()
         {
             var user = new User();
-            var file = new File();
+            var file = new File
+            {
+                Bytes = new byte[0],
+                FileExtension = ".jpg",
+                Filename = "fotka"
+            };
 
             user.Age = 18;
             user.City = "Питер";
@@ -27,9 +32,7 @@ namespace Performances.DataLayer.PostgreSQL.Tests
             user.Surname = "Купцова";
             user.Password = "12345";
             
-            file.Bytes = new byte[0];
-            file.FileExtension = ".jpg";
-            file.Filename = "fotka";
+            
 
             var usersRepository = new UserRepository(_connectionString);
             var result = usersRepository.CreateUser(user, file);
