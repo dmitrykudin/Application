@@ -12,6 +12,7 @@ namespace Performances.DataLayer.PostgreSQL.Tests
         private readonly string _connectionString = "Server=localhost;Port=5432;User Id=client;Password=passclient;Database=testdb;Search Path=test;";
         public List<Guid> _tempCreativeTeam = new List<Guid>();
         public List<Guid> _tempEvent = new List<Guid>();
+        public List<Guid> _tempUsers = new List<Guid>();
 
         [TestMethod]
         public void ShouldCreateEvent()
@@ -240,18 +241,200 @@ namespace Performances.DataLayer.PostgreSQL.Tests
             Assert.AreEqual(newEvent.Place, resultEvent.Place);
             Assert.AreEqual(newEvent.Description, resultEvent.Description);
         }
-        // TODO: GetUserUpcomingEvents test method, GetUserSubscribedEvents test method, UpdateEvent test method
-        //[TestMethod]
-        //public void ShouldGetUserSubscribedEvents()
-        //{
+        
+        [TestMethod]
+        public void ShouldGetUserSubscribedEvents()
+        {
+            var user = new User
+            {
+                Age = 18,
+                City = "Москва",
+                Email = "text@yandex.ru",
+                Name = "Марина",
+                Surname = "Купцова",
+                Password = "12345",
+            };
+            var creativeteam = new CreativeTeam
+            {
+                About = "test",
+                Email = "test@ya.ru",
+                Genre = "rock/hardcore/post-punk",
+                Name = "testband",
+                Password = "test",
+                Rating = 3.2,
+                SubscribersCount = 0
+            };
+            var photo = new File
+            {
+                Bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 },
+                FileExtension = ".jpeg",
+                Filename = "test.jpeg"
+            };
+            var newEvent = new Event
+            {
+                DateAndTime = DateTime.Now,
+                Description = "Big concert on the street of your city!",
+                ParticipantCount = 0,
+                Place = "Saint-Petersburg, Russia1"
+            };
+            var file = new File
+            {
+                Bytes = new byte[] { 1, 12, 123, 13 },
+                FileExtension = ".jpg",
+                Filename = "fotka"
+            };
 
-        //}
+            var userRepository = new UserRepository(_connectionString);
+            var eventRepository = new EventRepository(_connectionString);
+            var creativeteamRepository = new CreativeTeamRepository(_connectionString);
+
+            var newUser = userRepository.CreateUser(user, file);
+            _tempUsers.Add(newUser.Id);
+            var newCreativeteam = creativeteamRepository.CreateCreativeTeam(creativeteam, photo.Bytes, photo.Filename);
+            _tempCreativeTeam.Add(newCreativeteam.Id);
+            userRepository.Subscribe(newUser.Id, newCreativeteam.Id);
+
+            var teamEvent = eventRepository.CreateEvent(newEvent, photo.Bytes, photo.Filename, newCreativeteam.Id);
+            _tempEvent.Add(teamEvent.Id);
+
+            var subscribedEvents = new List<Event>();
+            subscribedEvents = eventRepository.GetUserSubscribedEvents(newUser);
+            var result = subscribedEvents.Find(x => x.Id == teamEvent.Id);
+
+            Assert.AreEqual(teamEvent.Place, result.Place);
+        }
+
+        [TestMethod]
+        public void ShoulGetUserUpcomingEvents()
+        {
+            var user = new User
+            {
+                Age = 18,
+                City = "Москва",
+                Email = "text@yandex.ru",
+                Name = "Марина",
+                Surname = "Купцова",
+                Password = "12345",
+            };
+            var creativeteam = new CreativeTeam
+            {
+                About = "test",
+                Email = "test@ya.ru",
+                Genre = "rock/hardcore/post-punk",
+                Name = "testband",
+                Password = "test",
+                Rating = 3.2,
+                SubscribersCount = 0
+            };
+            var photo = new File
+            {
+                Bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 },
+                FileExtension = ".jpeg",
+                Filename = "test.jpeg"
+            };
+            var newEvent = new Event
+            {
+                DateAndTime = DateTime.Now,
+                Description = "Big concert on the street of your city!",
+                ParticipantCount = 0,
+                Place = "Saint-Petersburg, Russia1"
+            };
+            var newEvent2 = new Event
+            {
+                DateAndTime = DateTime.Now,
+                Description = "Big concert!!!!!",
+                ParticipantCount = 0,
+                Place = "Saint-Petersburg, Russia1"
+            };
+            var file = new File
+            {
+                Bytes = new byte[] { 1, 12, 123, 13 },
+                FileExtension = ".jpg",
+                Filename = "fotka"
+            };
+
+            var userRepository = new UserRepository(_connectionString);
+            var eventRepository = new EventRepository(_connectionString);
+            var creativeteamRepository = new CreativeTeamRepository(_connectionString);
+
+            var newUser = userRepository.CreateUser(user, file);
+            _tempUsers.Add(newUser.Id);
+            var newCreativeteam = creativeteamRepository.CreateCreativeTeam(creativeteam, photo.Bytes, photo.Filename);
+            _tempCreativeTeam.Add(newCreativeteam.Id);
+            var teamEvent = eventRepository.CreateEvent(newEvent, photo.Bytes, photo.Filename, newCreativeteam.Id);
+            var teamEvent2 = eventRepository.CreateEvent(newEvent2, photo.Bytes, photo.Filename, newCreativeteam.Id);
+            _tempEvent.Add(teamEvent.Id);
+            _tempEvent.Add(teamEvent2.Id);
+            userRepository.GoToEvent(newUser.Id, teamEvent2.Id);
+
+            var usersEvents = new List<Event>();
+            usersEvents = eventRepository.GetUserUpcomingEvents(newUser);
+            var result = usersEvents.Find(x => x.Id == teamEvent2.Id);
+
+            Assert.AreEqual(teamEvent2.Description, result.Description);
+
+        }
+
+        [TestMethod]
+        public void ShouldUpdateEvent()
+        {
+            var creativeteam = new CreativeTeam
+            {
+                About = "test",
+                Email = "test@ya.ru",
+                Genre = "rock/hardcore/post-punk",
+                Name = "testband",
+                Password = "test",
+                Rating = 3.2,
+                SubscribersCount = 0
+            };
+            var photo = new File
+            {
+                Bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 },
+                FileExtension = ".jpeg",
+                Filename = "test.jpeg"
+            };
+
+            var newEvent = new Event
+            {
+                DateAndTime = DateTime.Now,
+                Description = "Big concert on the street of your city!",
+                ParticipantCount = 0,
+                Place = "Saint-Petersburg, Russia"
+            };
+            var file = new File
+            {
+                Bytes = new byte[] { 1, 12, 123, 13 },
+                FileExtension = ".jpg",
+                Filename = "fotka"
+            };
+
+            var creativeteamRepository = new CreativeTeamRepository(_connectionString);
+            var newcreativeteam = creativeteamRepository.CreateCreativeTeam(creativeteam, photo.Bytes, photo.Filename);
+            _tempCreativeTeam.Add(newcreativeteam.Id);
+
+            var eventrepository = new EventRepository(_connectionString);
+            var teamEvent = eventrepository.CreateEvent(newEvent, file.Bytes, file.Filename, newcreativeteam.Id);
+            _tempEvent.Add(teamEvent.Id);
+
+            teamEvent.Description = "Big concert!!!!!!!!!!!!!!!!!";
+
+            var result = eventrepository.UpdateEvent(teamEvent);
+
+            Assert.AreEqual(teamEvent.Description, result.Description);
+        }
+
+
 
         [TestCleanup]
         public void Clean()
         {
             foreach (var id in _tempEvent)
                 new EventRepository(_connectionString).DeleteEvent(id);
+            foreach (var id in _tempCreativeTeam)
+                new CreativeTeamRepository(_connectionString).DeleteCreativeTeam(id);
+            foreach (var id in _tempUsers)
+                new UserRepository(_connectionString).DeleteUser(id);
         }
     }
 }
