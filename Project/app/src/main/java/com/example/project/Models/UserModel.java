@@ -1,4 +1,4 @@
-package com.example.project;
+package com.example.project.Models;
 
 import java.util.UUID;
 
@@ -6,10 +6,15 @@ import java.util.UUID;
  * Created by Дмитрий on 22.10.2017.
  */
 
-public class User_reg {
+public class UserModel {
     private UUID _id;
     public UUID getId() { return _id; }
-    public void setId() { _id.randomUUID(); }
+    public void setId(UUID value)
+    {
+        if (value != null){
+            _id = value;
+        }
+    }
 
     private String _name;
     public String getName() { return  _name; }
@@ -49,9 +54,9 @@ public class User_reg {
     public String getCity() { return  _city; }
     public void setCity(String value) { _city = value; }
 
-    private File _photo;
-    public File getPhoto() { return _photo; }
-    public void setPhoto(File value) { _photo = value; }
+    private FileModel _photo;
+    public FileModel getPhoto() { return _photo; }
+    public void setPhoto(FileModel value) { _photo = value; }
 
     private int _age;
     public int getAge() { return _age; }
