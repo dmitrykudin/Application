@@ -5,63 +5,7 @@
     android:layout_height="match_parent"
     xmlns:design="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.project.User">
-<!--
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/near"
-                android:background="@null"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_action_near"
-                android:text="РЯДОМ"/>
-
-            <Button
-                android:id="@+id/event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:drawableTop="@drawable/ic_action_event"
-                android:text="СОБЫТИЯ" />
-
-            <Button
-                android:id="@+id/favourite"
-                android:background="@null"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_action_like"
-                android:text="ЛЮБИМОЕ"/>
-
-            <Button
-                android:id="@+id/profile"
-                android:background="@null"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_action_profile"
-                android:text="ПРОФИЛЬ"/>
-
-        </LinearLayout>
-    </android.support.design.widget.AppBarLayout>
--->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_gravity="top"
@@ -77,8 +21,7 @@
             design:itemTextColor="@color/white"/>
 
     </FrameLayout>
-
-
+<!--
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add"
         android:src="@drawable/ic_action_add"
@@ -86,5 +29,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin" />
-
+-->
 </android.support.design.widget.CoordinatorLayout>

@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class SignIn extends AppCompatActivity {
+public class SignIn extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,15 +21,25 @@ public class SignIn extends AppCompatActivity {
         final EditText etEmail = (EditText) findViewById(R.id.email);
         final EditText etPassword = (EditText) findViewById(R.id.password);
         final Button bsign = (Button) findViewById(R.id.sign_in);
-        final Button breg = (Button) findViewById(R.id.registration);
+        final Button breg = (Button) findViewById(R.id.reg);
 
-        breg.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent regint = new Intent(SignIn.this, Registration.class);
-                SignIn.this.startActivity(regint);
-            }
-        });
+        //УСЛОВИЕ!
+        bsign.setOnClickListener(this);
+        breg.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.reg:
+                Intent intent = new Intent(this, RegAct.class);
+                startActivity(intent);
+                break;
+            case R.id.sign_in:
+                Intent intent2 = new Intent(this, User.class);
+                startActivity(intent2);
+                break;
+        }
     }
 
     private boolean isEmailValid(String email) {

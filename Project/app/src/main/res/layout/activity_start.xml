@@ -7,14 +7,12 @@
     tools:context="com.example.project.Start">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="serif"
-        android:text="WELCOME! \nHAVE HUN!"
+        android:text="EVENT AROUND!"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="32sp"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="99dp"
-        tools:layout_editor_absoluteY="211dp" />
+        android:visibility="visible" />
 </android.support.constraint.ConstraintLayout>
