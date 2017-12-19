@@ -26,7 +26,28 @@ namespace Performances.DataLayer.PostgreSQL
             user.Photo = photo.Id;
             using (var connection = new NpgsqlConnection(_connectionString))
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
+                }
+                catch (NpgsqlException ex)
+                {
+                    throw ex;
+                }
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select * from users where email=@email";
+                    command.Parameters.AddWithValue("@email", user.Email);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return null;
+                        }
+                    }
+                }
+
                 using (var transaction = connection.BeginTransaction())
                 {
                     using (var command = connection.CreateCommand())
@@ -63,7 +84,7 @@ namespace Performances.DataLayer.PostgreSQL
             }
             return user;
         }
-
+        
         public void DeleteUser(Guid userId)
         {
             var user = new User();

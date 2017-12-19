@@ -84,7 +84,7 @@ namespace Performances.DataLayer.PostgreSQL.Tests
             var creativeteam2 = new CreativeTeam
             {
                 About = "test2",
-                Email = "test@ya.ru",
+                Email = "test2@ya.ru",
                 Genre = "rock/hardcore/post-punk",
                 Name = "testband2",
                 Password = "test2",
