@@ -147,7 +147,8 @@ namespace Performances.DataLayer.PostgreSQL
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "select * from users";
+                    command.CommandText = "select u.*, f.bytes from users u " +
+                                          "join files f on f.id = u.photo";
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -156,6 +157,7 @@ namespace Performances.DataLayer.PostgreSQL
                             {
                                 Id = reader.GetGuid(reader.GetOrdinal("id")),
                                 Photo = reader.GetGuid(reader.GetOrdinal("photo")),
+                                PhotoBytes = (byte[])reader["bytes"],
                                 Password = reader.GetString(reader.GetOrdinal("password")),
                                 Age = reader.GetInt32(reader.GetOrdinal("age")),
                                 Surname = reader.GetString(reader.GetOrdinal("surname")),
@@ -178,7 +180,10 @@ namespace Performances.DataLayer.PostgreSQL
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "select * from users where id = @id";
+                    command.CommandText = "select u.*, f.bytes " +
+                                          "from users u " +
+                                          "join files f on f.id = u.photo " +
+                                          "where u.id = @id";
                     command.Parameters.AddWithValue("@id", userId);
                     using (var reader = command.ExecuteReader())
                     {
@@ -188,6 +193,7 @@ namespace Performances.DataLayer.PostgreSQL
                         {
                             Id = reader.GetGuid(reader.GetOrdinal("id")),
                             Photo = reader.GetGuid(reader.GetOrdinal("photo")),
+                            PhotoBytes = (byte[])reader["bytes"],
                             Password = reader.GetString(reader.GetOrdinal("password")),
                             Age = reader.GetInt32(reader.GetOrdinal("age")),
                             Surname = reader.GetString(reader.GetOrdinal("surname")),
@@ -218,7 +224,9 @@ namespace Performances.DataLayer.PostgreSQL
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "select * from users where email = @email and password = @password";
+                    command.CommandText = "select u.*, f.bytes from users u " +
+                                          "join files f on f.id = u.photo " +
+                                          "where u.email = @email and password = @password";
                     command.Parameters.AddWithValue("@email", Email);
                     command.Parameters.AddWithValue("@password", Password);
 
@@ -237,6 +245,7 @@ namespace Performances.DataLayer.PostgreSQL
                             Name = reader.GetString(reader.GetOrdinal("name")),
                             Password = reader.GetString(reader.GetOrdinal("password")),
                             Photo = reader.GetGuid(reader.GetOrdinal("photo")),
+                            PhotoBytes = (byte[])reader["bytes"],
                             Surname = reader.GetString(reader.GetOrdinal("surname"))
                         };
                         return user;

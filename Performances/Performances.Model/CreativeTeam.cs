@@ -14,6 +14,7 @@ namespace Performances.Model
         public string Password { get; set; }
         public string Email { get; set; }
         public Guid Photo { get; set; }
+        public byte[] PhotoBytes { get; set; }
         public string Genre { get; set; }
         public string About { get; set; }
         public int SubscribersCount { get; set; }

@@ -14,6 +14,7 @@ namespace Performances.Model
         public int ParticipantCount { get; set; }
         public string Description { get; set; }
         public Guid Photo { get; set; }
+        public byte[] PhotoBytes { get; set; }
         public DateTime DateAndTime { get; set; }
     }
 }

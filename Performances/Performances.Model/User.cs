@@ -17,6 +17,7 @@ namespace Performances.Model
         public string Password { get; set; }
         public string City { get; set; }
         public Guid Photo { get; set; }
+        public byte[] PhotoBytes { get; set; }
         public int Age { get; set; }
     }
 }
