@@ -155,12 +155,14 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CreativeTeamController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CreateCreativeTeamParameters.cs" />
     <Compile Include="Models\CreateEventParameters.cs" />
     <Compile Include="Models\CreateUserParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -191,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\CreativeTeam\" />
     <Folder Include="Views\Events\" />
     <Folder Include="Views\Users\" />
   </ItemGroup>
