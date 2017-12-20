@@ -275,13 +275,12 @@ namespace Performances.DataLayer.PostgreSQL
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "select e.id, e.place, e.participantcount, e.description, e.datetime, e.photo " +
-                                          "from users u " +
-                                          "join subscribes s on u.id = s.userid " +
+                                          "from users u join subscribes s on u.id = s.userid " +
                                           "join creativeteam ct on s.creativeteamid = ct.id " +
                                           "join creativeteamevent cte on ct.id = cte.creativeteamid " +
-                                          "join event e on cte.eventid = e.id" +
+                                          "join event e on cte.eventid = e.id " +
                                           "where u.id=@userid and e.datetime >= current_date";
-                    command.Parameters.AddWithValue("@id", user.Id);
+                    command.Parameters.AddWithValue("@userid", user.Id);
                     using (var reader = command.ExecuteReader())
                     {
                         try

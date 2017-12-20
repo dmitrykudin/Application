@@ -65,7 +65,7 @@ namespace Performances.DataLayer.PostgreSQL.Tests
             {
                 Age = 18,
                 City = "Санкт-Петербург",
-                Email = "text@yandex.ru",
+                Email = "text1@yandex.ru",
                 Name = "Марина",
                 Surname = "Купцова",
                 Password = "12345",
@@ -81,7 +81,7 @@ namespace Performances.DataLayer.PostgreSQL.Tests
             {
                 Age = 18,
                 City = "Питер",
-                Email = "text@yandex.ru",
+                Email = "text2@yandex.ru",
                 Name = "Марина",
                 Surname = "Купцова",
                 Password = "12345",
